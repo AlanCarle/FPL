@@ -4,11 +4,8 @@ import json
 from pathlib import Path
 from math import floor
 
-import timeit
 
-start = timeit.default_timer()
-
-filepath_to_use = r"C:\Users\Alan\Documents\visual studio code\fpl stuff\fpl api stuff\Basic fpl api calls\ALL FUNCS results"
+filepath_to_use = r"C:\Users\name\so on\so forth"
 
 '''
 def fplAPI_FAKE_DONOTUSE([VARIABLE INPUTS], max_iterations, save_to_csv=None, func_filepath_save=None, [OUTNAMES=None]):
@@ -220,7 +217,7 @@ def fplAPI_specific_assertNumberInputs_checkMaxIter(max_iterations, userAPIVar1,
 
 def fplAPI_mostValuableTeams(save_to_csv=None, func_filepath_save=None, outName_mostValuableTeams=None):
     # Function Code: 0003
-    # Function Uses: 0002
+    # Function Uses: 0001
     
     # ensure all inputs are of correct type (or if optional and not included, that they are None)
     assert(isinstance(save_to_csv, bool) or save_to_csv == None)
@@ -244,7 +241,7 @@ def fplAPI_mostValuableTeams(save_to_csv=None, func_filepath_save=None, outName_
 
 def fplAPI_setPieceNotes(save_to_csv=None, func_filepath_save=None, outName_setPieceNotes=None, outName_lastUpdated=None):
     # Function Code: 0004
-    # Function Uses: 0002    
+    # Function Uses: 0001    
     
     # ensure all inputs are of correct type, not including optional, however including save_to_csv
     assert(isinstance(save_to_csv, bool) or save_to_csv == None)
@@ -619,7 +616,7 @@ def fplAPI_liveGameweekEvent(gameweek, max_iterations, save_to_csv=None, func_fi
 
 def fplAPI_fixtures(save_to_csv=None, func_filepath_save=None, outName_fixtures=None, outName_fixtureElementStats=None):
     # Function Code: 0011
-    # Function Uses: 0002
+    # Function Uses: 0001
     
     # check save_to_csv is bool or none
     assert(isinstance(save_to_csv, bool) or save_to_csv == None)
@@ -659,7 +656,7 @@ def fplAPI_fixtures(save_to_csv=None, func_filepath_save=None, outName_fixtures=
 
 def fplAPI_eventStatus(save_to_csv=None, func_filepath_save=None, outName_status=None, outName_isUpdating=None):
     # Function Code: 0012
-    # Function Uses: 0002
+    # Function Uses: 0001
     
     # check save_to_csv is bool or none
     assert(isinstance(save_to_csv, bool) or save_to_csv == None)
@@ -803,7 +800,7 @@ def fplAPI_dreamTeam(gameweek, max_iterations, save_to_csv=None, func_filepath_s
 
 def fplAPI_bootstrap(save_to_csv=None, func_filepath_save=None, outName_events=None, outName_teams=None, outName_elements=None, outName_elementTypes=None, outName_phases=None, outName_elementStats=None, outName_gameSettings=None, outName_totalPlayers=None, outName_chipPlays=None):
     # Function Code: 0015
-    # Function Uses: 0002
+    # Function Uses: 0001
     
     # check save_to_csv is bool or none
     assert(isinstance(save_to_csv, bool) or save_to_csv == None)
@@ -858,7 +855,7 @@ def fplAPI_bootstrap(save_to_csv=None, func_filepath_save=None, outName_events=N
 
 def fplAPI_bestLeagues(save_to_csv=None, func_filepath_save=None, outName_bestLeagues=None):
     # Function Code: 0016
-    # Function Uses: 0002
+    # Function Uses: 0001
     
     # check save_to_csv is bool or none
     assert(isinstance(save_to_csv, bool) or save_to_csv == None)
