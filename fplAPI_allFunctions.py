@@ -3,9 +3,10 @@ import pandas as pd
 import json
 from pathlib import Path
 from math import floor
+from datetime import datetime
 
 
-filepath_to_use = r"C:\Users\name\so on\so forth"
+#filepath_to_use = r"C:\Users\name
 
 '''
 def fplAPI_FAKE_DONOTUSE([VARIABLE INPUTS], max_iterations, save_to_csv=None, func_filepath_save=None, [OUTNAMES=None]):
@@ -137,12 +138,13 @@ def fplAPI_specific_constructFilepathsAndTestExists(userFilepath, userOutNames):
     # check output folder exists
     assert(Path(userFilepath).exists())
     
+    timePrefix = datetime.now().strftime("%Y.%m.%d..%H.%M.%S.%f")
     # if tuple, do testing with tuple input
     if is_tuple:
         # create all outpaths
         outPath_tuple = ()
         for userOutNames_loop in userOutNames:
-            outPath_tuple = outPath_tuple + (userFilepath + r"\\" + userOutNames_loop + ".csv",)
+            outPath_tuple = outPath_tuple + (userFilepath + r"\\" + timePrefix + " " + userOutNames_loop + ".csv",)
         # check that the files at the filepath do not exist
         for userOutPath_loop in outPath_tuple:
             assert(not Path(userOutPath_loop).exists())
@@ -151,7 +153,7 @@ def fplAPI_specific_constructFilepathsAndTestExists(userFilepath, userOutNames):
     # only other option is string (due to assert earlier)
     # now we do testing on string input
     else:
-        outPath_str = userFilepath + r"\\" + userOutNames + ".csv"
+        outPath_str = userFilepath + r"\\" + timePrefix + " " + userOutNames + ".csv"
         assert(not Path(outPath_str).exists())
         outPath_return = outPath_str
     
@@ -951,11 +953,116 @@ def fplAPI_returnLastPageandRank(leagueID, pageGuess, estimateMaxIterations, sav
 
     return df_leagueStats
 
+def FPLAPI_managerPicksPlayers(df_IN_managerPicks, playerID_Tuple, save_to_csv=None, func_filepath_save=None, outName_managerPickPlayers=None):
+    # Function Code: #0018
+    # Function Uses: #0001
+    
+    # check inputs are good
+    assert(isinstance(df_IN_managerPicks, pd.core.frame.DataFrame))
+    assert(isinstance(playerID_Tuple, tuple))
+    for playerID in playerID_Tuple:
+        assert(isinstance(playerID, int))
+    
+    # check filepath and filenames are all in order
+    if save_to_csv == True:
+        outPath_managerPickPlayers = fplAPI_specific_constructFilepathsAndTestExists(func_filepath_save, outName_managerPickPlayers)
+    
+    # make new dataframe with all unique manager IDs (from manager list)
+    ar_managerIDs = df_IN_managerPicks[['FA_manager']]['FA_manager'].unique()
+    df_managerPickCount = pd.DataFrame(ar_managerIDs, columns=['FA_manager'])
+    
+    
+    # go through each manager, count number of instances of player ID for that manager
+    managerCountList = []
+    for managerID in ar_managerIDs:
+        # make smaller df for just that manager
+        df_picksFilter = df_IN_managerPicks[df_IN_managerPicks.FA_manager == managerID]
+        pickCount = 0
+        for playerID in playerID_Tuple:
+            # if player id in smaller df, add 1 to the pickcount
+            if (playerID in df_picksFilter['element'].unique()) == True:
+                pickCount = pickCount + 1
+        managerCountList.append(pickCount)
 
+    # add column to manager list, sort by total count
+    df_managerPickCount['total_count'] = managerCountList
+    df_managerPickCount = df_managerPickCount.sort_values(by=['total_count'], ascending=False)
+    
+    # export them
+    if save_to_csv == True:
+        df_managerPickCount.to_csv(outPath_managerPickPlayers, index=False)
+    
+    return df_managerPickCount
 
+def fplAPI_findSameEventTeam(leagueID, playerIDtuple, captainPlayerID, currentGW, maxIter_leaguePages, maxIter_managerList, filepathToSave=None, outName_playerCountList=None, ifLeagueIsDownload=None, downloadedLeague=None):
+    # Function Code: #0019
+    # Function Uses: #0001, #0010, #0017, #0009, #0008, #0018
+    
+    
+    # check ifLeagueIsDownload is all good
+    assert(isinstance(ifLeagueIsDownload, bool) or ifLeagueIsDownload == None)
+    if ifLeagueIsDownload == None: ifLeagueIsDownload = False
+    assert(isinstance(downloadedLeague, pd.core.frame.DataFrame) or downloadedLeague == None)
 
+    
+    outPath_playerCountList = fplAPI_specific_constructFilepathsAndTestExists(filepathToSave, outName_playerCountList)
+       
+    
+    # download gameweek summary, sum gameweek scores of players in playerIDtuple (taking captain into account)
+    df_gwSummary = fplAPI_liveGameweekEvent(currentGW, 100,True,filepathToSave, "gw stats", "gw pointsdist")[0]
+    pointsSum = 0
+    for playerID in playerIDtuple:
+        indexNum = df_gwSummary.index.get_loc(df_gwSummary.query('id == ' + str(playerID)).index[0])
+        if playerID == captainPlayerID:
+            pointsSum = pointsSum + (2* df_gwSummary.loc[indexNum, "stats.total_points"])
+        else:
+            pointsSum = pointsSum + df_gwSummary.loc[indexNum, "stats.total_points"]
+    # the variable "pointsSum" now holds the total points for that team
+    print("Total points of team given is " + str(pointsSum))
+    
+    
+    # if, ifLeagueIsDownload = False, run following to get the league download through API
+    if ifLeagueIsDownload == False:
+    
+        # check length of league. If longer than limit set, exit, else continue.
+        numLeaguePages = fplAPI_returnLastPageandRank(leagueID, 7, 100).loc[0, "final page"]
+        if numLeaguePages >= maxIter_leaguePages:
+            print("page limit is " + str(maxIter_leaguePages) + ", league pages is " + str(numLeaguePages) + ", therefore exit")
+            exit()
+        print("page limit is " + str(maxIter_leaguePages) + ", league pages is " + str(numLeaguePages) + ", therefore continue") 
+        
+        
+        # get tuple of manager IDs in the league with their gameweek total = pointsSum
+        df_leagueToFilter = fplAPI_leagueStandings(leagueID, tuple(range(1,numLeaguePages+1)), maxIter_leaguePages+10, True, filepathToSave, str(leagueID) + " standings", str(leagueID) + " info", str(leagueID) + " lastupdate", str(leagueID) + " meta")[0]
+        
+    # if league already downloaded, get it from
+    else:
+        df_leagueToFilter = downloadedLeague
+        print("League obtained from downloaded files")
+        
+        
+        
+    df_leagueToFilter = df_leagueToFilter[df_leagueToFilter.event_total == pointsSum]
+    managerIDList = tuple(list(df_leagueToFilter['entry']))
+    # if manager list too long, print warning and exit
+    if len(managerIDList) >= maxIter_managerList:
+        print("manager limit is " + str(maxIter_managerList) + ", number of managers matching points total is " + str(len(managerIDList)) + ", therefore exit")
+        exit()
+    print("manager limit is " + str(maxIter_managerList) + ", number of managers matching points total is " + str(len(managerIDList)) + ", therefore continue") 
+        
+    
+    
+    # for each manager in managerIDList, get their picks
+    df_managerPicks = fplAPI_managerEventPicks(managerIDList,currentGW,100000000,True,filepathToSave,"manager picks","manager subs", "manager history", "manager chips")[0]
+    
+    # for each manager find how many of their picks are in the player list
+    df_playerCounts = FPLAPI_managerPicksPlayers(df_managerPicks, playerIDtuple)
+    
 
+    df_playerCounts.to_csv(outPath_playerCountList, index=False)
 
+    
+    return df_playerCounts
 
 
 
