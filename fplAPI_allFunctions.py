@@ -708,7 +708,7 @@ def fplAPI_elementSummary(elementID, max_iterations, save_to_csv=None, func_file
         outPath_fixtures, outPath_history, outPath_historyPast = fplAPI_specific_constructFilepathsAndTestExists(func_filepath_save, (outName_fixtures, outName_history, outName_historyPast))
 
     # create the dataframes, s.t. all further additions can be concat onto these
-    df_fixtres = pd.DataFrame()
+    df_fixtures = pd.DataFrame()
     df_history = pd.DataFrame()
     df_historyPast = pd.DataFrame()
     
@@ -736,19 +736,19 @@ def fplAPI_elementSummary(elementID, max_iterations, save_to_csv=None, func_file
             df_historyPast_temp.insert(0, "FA_element", elementID_loop)
             
             # concat them all
-            df_fixtres = pd.concat([df_fixtres, df_fixtures_temp], axis=0)
+            df_fixtures = pd.concat([df_fixtures, df_fixtures_temp], axis=0)
             df_history = pd.concat([df_history, df_history_temp], axis=0)
             df_historyPast = pd.concat([df_historyPast, df_historyPast_temp], axis=0)
 
 
     # export to csv
     if save_to_csv == True:
-        df_fixtres.to_csv(outPath_fixtures, index=False)
+        df_fixtures.to_csv(outPath_fixtures, index=False)
         df_history.to_csv(outPath_history, index=False)
         df_historyPast.to_csv(outPath_historyPast, index=False)
 
 
-    return df_fixtres, df_history, df_historyPast
+    return df_fixtures, df_history, df_historyPast
 
 def fplAPI_dreamTeam(gameweek, max_iterations, save_to_csv=None, func_filepath_save=None, outName_gameweekDreamTeam=None, outName_gameweekDreamPlayer=None):
     # Function Code: 0014
@@ -879,6 +879,7 @@ def fplAPI_bestLeagues(save_to_csv=None, func_filepath_save=None, outName_bestLe
     return df_bestLeagues
 
 
+# The following functions rely on not only the basic #0001, #0002 functions, but also the other above functions
 
 def fplAPI_returnLastPageandRank(leagueID, pageGuess, estimateMaxIterations, save_to_csv=None, func_filepath_save=None, outName_leagueStats=None):
     # Function Code: 0017
@@ -1064,7 +1065,30 @@ def fplAPI_findSameEventTeam(leagueID, playerIDtuple, captainPlayerID, currentGW
     
     return df_playerCounts
 
+def fplAPI_allPlayersElementSummary(save_to_csv=None, func_filepath_save=None, outName_fixtures=None, outName_history=None, outName_historyPast=None):
+    # Function Code: #0020
+    # Function Uses: #0001, #0013
 
+    # find the highest id that covers a player
+    df_latestGW = fplAPI_liveGameweekEvent(15,1000)[0]
+    max_id = df_latestGW['id'].max()
+    
+   # check save_to_csv is bool or none
+    assert(isinstance(save_to_csv, bool) or save_to_csv == None)
+    # check filepath and filenames are all in order
+    if save_to_csv == True:
+        outPath_fixtures, outPath_history, outPath_historyPast = fplAPI_specific_constructFilepathsAndTestExists(func_filepath_save, (outName_fixtures, outName_history, outName_historyPast))
+
+    df_fixtures, df_history, df_historyPast = fplAPI_elementSummary(tuple(range(1,max_id+1)),100000)
+    
+    # export to csv
+    if save_to_csv == True:
+        df_fixtures.to_csv(outPath_fixtures, index=False)
+        df_history.to_csv(outPath_history, index=False)
+        df_historyPast.to_csv(outPath_historyPast, index=False)
+
+
+    return df_fixtures, df_history, df_historyPast
 
 
 
