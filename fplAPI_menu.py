@@ -17,7 +17,7 @@ def verifyNumbers(verify_elementID=None, verify_managerID=None, verify_eventID=N
     # verify main inputs first
     verifyList = [verify_elementID, verify_managerID, verify_eventID, verify_leagueID, verify_page_number]
     for i in range(0, 5):
-        if verifyList[i] != None:
+        if verifyList[i] != "":
             # if dash is in the string, a tuple response must be given
             midVal = verifyList[i].find("-")
             if midVal != -1:
@@ -25,7 +25,6 @@ def verifyNumbers(verify_elementID=None, verify_managerID=None, verify_eventID=N
             else:
                 verifyList[i] = int(verifyList[i])
 
-    
     # verify max_iterations here, since there is less to be done
     if verify_max_iter != "":
         verify_max_iter = int(verify_max_iter)
@@ -48,10 +47,36 @@ def func_basicDownloadEndpointExportCSV(endPointType, filepath_used, max_iter, e
     
     
     
-    if endPointType == "fplAPI_managerEventPicks" :
+    if endPointType == "fplAPI_managerEventPicks":
         fplAPI_managerEventPicks(managerID, eventID, max_iter, True, filepath_used, outname_1, outname_2, outname_3, outname_4)
 
+# create activeInput strings with ease
+def txt2activeInput(myTxt):
+    
+    
+    # create the strings to use
+    midVal = myTxt.find(" ")
+    str1 = myTxt[0:midVal]
+    str2 = myTxt[midVal:len(myTxt)]
 
+    # apply n/d with first 5 inputs
+    constructTuple = ()
+    for i in range(1,6):
+        if str1.find(str(i)) != -1:
+            constructTuple = constructTuple + ("n",)
+        else:
+            constructTuple = constructTuple + ("d",)
+
+    # apply n/d with next 9 inputs
+    for i in range(0,int(str2)):
+        constructTuple = constructTuple + ("n",)
+    for i in range(int(str2),9):
+        constructTuple = constructTuple + ("d",)
+
+    # last input is always n
+    constructTuple = constructTuple + ("n",)
+
+    return constructTuple
 
 
 # delete all frames existing in main slots (main and menu). this is run before loading any frames
@@ -95,8 +120,12 @@ def func_pack_frmHome():
     # pack menu
     frm_menuHome = tk.Frame(frm_menu_const, height=base_height, width=150, bg="light pink")
     func_pack_MenuConstButtons(frm_menuHome)
-    btn_basicDownloads = tk.Button(frm_menuHome, text='Basic' + "\n" + 'Downloads',font=('Bold',13), fg='black',bg='light pink',command=lambda: func_pack_frmBasicDownloads())
-    btn_basicDownloads.place(relx=0.5, rely=0.18, anchor="center")
+    btn_basicDownloads_false = tk.Button(frm_menuHome, text='NO BAS' + "\n" + 'Downloads',font=('Bold',13), fg='black',bg='light pink',command=lambda: func_pack_frmBasicDownloads())
+    btn_basicDownloads_false.place(relx=0.5, rely=0.18, anchor="center")
+    frm_menuHome.pack(pady=20)
+    
+    btn_basicDownloads = tk.Button(frm_menuHome, text='Basic' + "\n" + 'Downloads',font=('Bold',13), fg='black',bg='light pink',command=lambda: func_pack_frmBasicDownloadsHome())
+    btn_basicDownloads.place(relx=0.5, rely=0.27, anchor="center")
     frm_menuHome.pack(pady=20)
     
     # pack main
@@ -115,6 +144,62 @@ def func_pack_frmHome():
     frm_mainHome.pack(pady=20)
 
 
+
+
+
+def func_pack_frmBasicDownloadsHome():
+    # ensure no frames exist in const frames
+    func_deleteFrames()
+    
+    # pack menu
+    frm_menu_BasicDownloadsHome = tk.Frame(frm_menu_const, height=base_height, width=150, bg="light pink")
+    func_pack_MenuConstButtons(frm_menu_BasicDownloadsHome)
+    frm_menu_BasicDownloadsHome.pack(pady=20)
+
+    # pack main
+    frm_main_BasicDownloadsHome = tk.Frame(frm_main_const, bg="light grey")
+    frm_main_BasicDownloadsHome.pack()
+    lblTitle = tk.Label(frm_main_BasicDownloadsHome, text="Select which endpoint to download",font=('Bold',30),bg="light grey")
+    lblTitle.pack()
+
+    func_pack_frmBasicDownloadsEndpointButtons(frm_menu_BasicDownloadsHome)
+
+
+
+def func_pack_frmBasicDownloadsEndpointButtons(frame_to_pack):
+    constNumEntries = ("elementID", "managerID", "eventID", "leagueID", "page_number")
+    buttonArray = (("Best Leagues",txt2activeInput(" 1"),("Best Leagues","---","---","---","---","---","---","---","---")), 
+                   ("Bootstrap",txt2activeInput(" 9"),("Events","Teams","Elements","Element Types","Phases","Element Stats","Game Settings","Total Players","Chip Settings")), 
+                   ("Dream Team",txt2activeInput("3 2"),("GW Dream Team","GW Dream Player","---","---","---","---","---","---","---")), 
+                   ("Element Summary",txt2activeInput("1 3"),("Fixtures","History","History Past","---","---","---","---","---","---")), 
+                   ("Event Status",txt2activeInput(" 2"),("Status","Is Updating","---","---","---","---","---","---","---")), 
+                   ("Fixtures",txt2activeInput(" 2"),("Fixtures","Fixture Element Stats","---","---","---","---","---","---","---")), 
+                   ("Live GW Event",txt2activeInput("3 2"),("Element Stats","Points Distribution","---","---","---","---","---","---","---")), 
+                   ("League Standings",txt2activeInput("45 4"),("Standings","Info","Last Update","Meta","---","---","---","---","---")), 
+                   ("Manager Picks",txt2activeInput("23 4"),("Manager Picks","Subs","Entry History","Active Chips","---","---","---","---","---")), 
+                   ("Manager Info",txt2activeInput("2 2"),("General","League Info","---","---","---","---","---","---","---")), 
+                   ("Manager History",txt2activeInput("2 3"),("Current Season","Past Seasons","Chips","---","---","---","---","---","---")), 
+                   ("Manager Transfers",txt2activeInput("2 1"),("Transfers","---","---","---","---","---","---","---","---")), 
+                   ("Set Piece Notes",txt2activeInput(" 2"),("Set Piece Notes","Last Updated","---","---","---","---","---","---","---")), 
+                   ("Most Valuable Teams",txt2activeInput(" 1"),("Most Valuable Teams","---","---","---","---","---","---","---","---")))
+    #5,9,1
+
+    
+
+    
+    
+    # pack buttons for each endpoint
+    for i in range(0,len(buttonArray)):
+        btn_basicDownloads_1 = tk.Button(frame_to_pack, text=buttonArray[i][0],font=('Bold',11), fg='black',bg='light pink',command=lambda i=i: func_pack_frmBasicDownloadsTest(buttonArray[i][0], "Fill in the blue entires then select Download", buttonArray[i][1], constNumEntries, buttonArray[i][2], "fplAPI_managerEventPicks"))
+        btn_basicDownloads_1.place(relx=0.5, rely=0.12 + (i*0.055), anchor="center")
+
+
+
+
+
+
+
+
 # pack the menu and main frames for the basic downloads page
 def func_pack_frmBasicDownloads():
     
@@ -126,6 +211,7 @@ def func_pack_frmBasicDownloads():
     func_pack_MenuConstButtons(frm_menu_BasicDownloads)
     frm_menu_BasicDownloads.pack(pady=20)
     
+    
     # pack main
     frm_main_BasicDownloads = tk.Frame(frm_main_const, height=base_height, width=base_width-150,bg="light grey")
     frm_main_BasicDownloads.pack(pady=20)
@@ -135,15 +221,18 @@ def func_pack_frmBasicDownloads():
     lblBasicDownloadsExplain = tk.Label(frm_main_BasicDownloads, text="Ensure cells highlighted blue match what you want to download, then select the download button.",font=('Bold',15),bg="light grey")
     lblBasicDownloadsExplain.grid(column=0,row=1,pady=(0,30),columnspan=2)
 
+    # create tuple statiung which inputs are active
+    activeInputs = ("disabled", "normal", "normal", "disabled", "disabled", "normal", "normal", "normal", "normal", "disabled", "disabled", "disabled", "disabled", "disabled", "normal")
 
     # define list of entries for the specific download page
-    numEntries = ("managerID", "eventID")
-    txtEntries = ("Manager Picks", "Subs", "Entry History", "Active Chips")
+    numEntries = ("elementID", "managerID", "eventID", "leagueID", "page_number")
+    txtEntries = ("Manager Picks", "Subs", "Entry History", "Active Chips", "-----", "-----", "-----", "-----", "-----")
+    assert(len(activeInputs) == len(numEntries) + len(txtEntries) + 1)
     fullEntries = ()
-    for x in numEntries:
-        fullEntries = fullEntries + (("Choose numerical endpoint variable:           " + x, ""),)
-    for x in txtEntries:
-        fullEntries = fullEntries + (("Choose text csv filename:                           " + x, x),)
+    for i in range(0, len(numEntries)):
+        fullEntries = fullEntries + (("Choose numerical endpoint variable:           " + numEntries[i], ""),)
+    for i in range(0, len(txtEntries)):
+        fullEntries = fullEntries + (("Choose text csv filename:                           " + txtEntries[i], txtEntries[i]),)
     fullEntries = fullEntries + (("[OPTIONAL] Choose numerical max download iterations", ""),)
 
     # define array to hold widgets, allows for easier creation/editing
@@ -157,20 +246,82 @@ def func_pack_frmBasicDownloads():
     
     # set up widgets
     for i in range(0,len(fullEntries)):
-        widgetsList[i+1][0] = tk.Label(frm_main_BasicDownloads, text=fullEntries[i][0], font=('Arial',13),bg="light grey")
+        widgetsList[i+1][0] = tk.Label(frm_main_BasicDownloads, text=fullEntries[i][0], font=('Arial',13),bg="light grey", state=activeInputs[i])
         widgetsList[i+1][0].grid(row=i+3,column=0, sticky="w")
-        widgetsList[i+1][1] = tk.Entry(frm_main_BasicDownloads, text="", bg="light blue", font=('Arial',13))
+        widgetsList[i+1][1] = tk.Entry(frm_main_BasicDownloads, text="", bg="light blue", font=('Arial',13), state=activeInputs[i])
         widgetsList[i+1][1].grid(row=i+3,column=1)
         widgetsList[i+1][1].insert(0,fullEntries[i][1])
 
+
     # add button to run the appropriate code
-    widgetsList[len(fullEntries) + 1][1] = tk.Button(frm_main_BasicDownloads,text="Download File", font=('Arial',13), bg="light grey", command=lambda: func_basicDownloadEndpointExportCSV("fplAPI_managerEventPicks",settingsData['save_filepath'],widgetsList[7][1].get(), managerID=widgetsList[1][1].get(), eventID=widgetsList[2][1].get(), outname_1=widgetsList[3][1].get(), outname_2=widgetsList[4][1].get(), outname_3=widgetsList[5][1].get(), outname_4=widgetsList[6][1].get()))
+    widgetsList[len(fullEntries) + 1][1] = tk.Button(frm_main_BasicDownloads,text="Download File", font=('Arial',13), bg="light grey", command=lambda: func_basicDownloadEndpointExportCSV("fplAPI_managerEventPicks",settingsData['save_filepath'],widgetsList[15][1].get(), elementID=widgetsList[1][1].get(), managerID=widgetsList[2][1].get(), eventID=widgetsList[3][1].get(), leagueID=widgetsList[4][1].get(), page_number=widgetsList[5][1].get(), outname_1=widgetsList[6][1].get(), outname_2=widgetsList[7][1].get(), outname_3=widgetsList[8][1].get(), outname_4=widgetsList[9][1].get(), outname_5=widgetsList[10][1].get(), outname_6=widgetsList[11][1].get(), outname_7=widgetsList[12][1].get(), outname_8=widgetsList[13][1].get(), outname_9=widgetsList[14][1].get()))
     widgetsList[len(fullEntries) + 1][1].grid(row=len(fullEntries)+3,column=1,pady=(20,0))
+
+
+
+
+# pack the menu and main frames for the basic downloads page
+def func_pack_frmBasicDownloadsTest(headerText, subheaderText, activeInputs, numEntries, txtEntries, fpl_type):
     
+    # ensure no frames exist in const frames
+    func_deleteFrames()
     
-# fplAPI_managerEventPicks(int(widgetsList[1][1].get()), int(widgetsList[2][1].get()), int(widgetsList[7][1].get()), True, settingsData['save_filepath'], widgetsList[3][1].get(), widgetsList[4][1].get(), widgetsList[5][1].get(), widgetsList[6][1].get())
+    # pack menu
+    frm_menu_BasicDownloads = tk.Frame(frm_menu_const, height=base_height, width=150, bg="light pink")
+    func_pack_MenuConstButtons(frm_menu_BasicDownloads)
+    frm_menu_BasicDownloads.pack(pady=20)
+    func_pack_frmBasicDownloadsEndpointButtons(frm_menu_BasicDownloads)
     
-# func_basicDownloadEndpointExportCSV("fplAPI_managerEventPicks",settingsData['save_filepath'],widgetsList[7][1].get(), managerID=widgetsList[1][1].get(), eventID=widgetsList[2][1].get(), outname_1=widgetsList[3][1].get(), outname_2=widgetsList[4][1].get(), outname_3=widgetsList[5][1].get(), outname_4=widgetsList[6][1].get())
+    # pack main
+    frm_main_BasicDownloads = tk.Frame(frm_main_const, height=base_height, width=base_width-150,bg="light grey")
+    frm_main_BasicDownloads.pack(pady=20)
+    # pack header text
+    lblBasicDownloadsTitle = tk.Label(frm_main_BasicDownloads, text=headerText,font=('Bold',30),bg="light grey")
+    lblBasicDownloadsTitle.grid(column=0,row=0,columnspan=2)
+    lblBasicDownloadsExplain = tk.Label(frm_main_BasicDownloads, text=subheaderText,font=('Bold',15),bg="light grey")
+    lblBasicDownloadsExplain.grid(column=0,row=1,pady=(0,30),columnspan=2)
+
+    # create tuple statiung which inputs are active
+    #activeInputs = ("disabled", "normal", "normal", "disabled", "disabled", "normal", "normal", "normal", "normal", "disabled", "disabled", "disabled", "disabled", "disabled", "normal")
+
+    # define list of entries for the specific download page
+    #numEntries = ("elementID", "managerID", "eventID", "leagueID", "page_number")
+    #txtEntries = ("Manager Picks", "Subs", "Entry History", "Active Chips", "-----", "-----", "-----", "-----", "-----")
+    assert(len(activeInputs) == len(numEntries) + len(txtEntries) + 1)
+    fullEntries = ()
+    for i in range(0, len(numEntries)):
+        fullEntries = fullEntries + (("Choose numerical endpoint variable:           " + numEntries[i], ""),)
+    for i in range(0, len(txtEntries)):
+        fullEntries = fullEntries + (("Choose text csv filename:                           " + txtEntries[i], txtEntries[i]),)
+    fullEntries = fullEntries + (("[OPTIONAL] Choose numerical max download iterations", ""),)
+
+    # define array to hold widgets, allows for easier creation/editing
+    # length is number of "specific" entries, plus 1 line for headers at top, and 1 for run code
+    num_cols = 2; num_rows = len(fullEntries) + 2
+    widgetsList = [[0] * num_cols for i in range(num_rows)]
+    
+    # pack header of widget table
+    widgetsList[0][1] = tk.Label(frm_main_BasicDownloads, text="Entry", font=('Arial',13),bg="light grey")
+    widgetsList[0][1].grid(row=2,column=1)
+    
+    # set up widgets
+    for i in range(0,len(fullEntries)):
+        widgetsList[i+1][0] = tk.Label(frm_main_BasicDownloads, text=fullEntries[i][0], font=('Arial',13),bg="light grey", state=activeInputs[i])
+        widgetsList[i+1][0].grid(row=i+3,column=0, sticky="w")
+        widgetsList[i+1][1] = tk.Entry(frm_main_BasicDownloads, text="", bg="light blue", font=('Arial',13), state=activeInputs[i])
+        widgetsList[i+1][1].grid(row=i+3,column=1)
+        widgetsList[i+1][1].insert(0,fullEntries[i][1])
+
+
+    # add button to run the appropriate code
+    widgetsList[len(fullEntries) + 1][1] = tk.Button(frm_main_BasicDownloads,text="Download File", font=('Arial',13), bg="light grey", command=lambda: func_basicDownloadEndpointExportCSV(fpl_type,settingsData['save_filepath'],widgetsList[15][1].get(), elementID=widgetsList[1][1].get(), managerID=widgetsList[2][1].get(), eventID=widgetsList[3][1].get(), leagueID=widgetsList[4][1].get(), page_number=widgetsList[5][1].get(), outname_1=widgetsList[6][1].get(), outname_2=widgetsList[7][1].get(), outname_3=widgetsList[8][1].get(), outname_4=widgetsList[9][1].get(), outname_5=widgetsList[10][1].get(), outname_6=widgetsList[11][1].get(), outname_7=widgetsList[12][1].get(), outname_8=widgetsList[13][1].get(), outname_9=widgetsList[14][1].get()))
+    widgetsList[len(fullEntries) + 1][1].grid(row=len(fullEntries)+3,column=1,pady=(20,0))
+
+
+
+
+
+
 
 ##########################################################################################################
 ####    Start of main code    ############################################################################
