@@ -45,10 +45,38 @@ def func_basicDownloadEndpointExportCSV(endPointType, filepath_used, max_iter, e
     elementID, managerID, eventID, leagueID, page_number, max_iter = verifyNumbers(elementID, managerID, eventID, leagueID, page_number, max_iter)
 
     
-    
-    
-    if endPointType == "fplAPI_managerEventPicks":
+    if endPointType == "fplAPI_bestLeagues":
+        fplAPI_bestLeagues(True, filepath_used, outname_1)
+    elif endPointType == "fplAPI_bootstrap":
+        fplAPI_bootstrap(True, filepath_used, outname_1, outname_2, outname_3, outname_4, outname_5, outname_6, outname_7, outname_8, outname_9)
+    elif endPointType == "fplAPI_dreamTeam":
+        fplAPI_dreamTeam(eventID, max_iter, True, filepath_used, outname_1, outname_2)
+    elif endPointType == "fplAPI_elementSummary":
+        fplAPI_elementSummary(elementID, max_iter, True, filepath_used, outname_1, outname_2, outname_3)
+    elif endPointType == "fplAPI_eventStatus":
+        fplAPI_eventStatus(True, filepath_used, outname_1, outname_2)
+    elif endPointType == "fplAPI_fixtures":
+        fplAPI_fixtures(True, filepath_used, outname_1, outname_2)
+    elif endPointType == "fplAPI_liveGameweekEvent":
+        fplAPI_liveGameweekEvent(eventID, max_iter, True, filepath_used, outname_1, outname_2)
+    elif endPointType == "fplAPI_leagueStandings":
+        fplAPI_leagueStandings(leagueID, page_number, max_iter, True, filepath_used, outname_1, outname_2, outname_3, outname_4)
+    elif endPointType == "fplAPI_managerEventPicks":
         fplAPI_managerEventPicks(managerID, eventID, max_iter, True, filepath_used, outname_1, outname_2, outname_3, outname_4)
+    elif endPointType == "fplAPI_manager":
+        fplAPI_manager(managerID, max_iter, True, filepath_used, outname_1, outname_2)
+    elif endPointType == "fplAPI_managerHistory":
+        fplAPI_managerHistory(managerID, max_iter, True, filepath_used, outname_1, outname_2, outname_3)
+    elif endPointType == "fplAPI_managerTransfers":
+        fplAPI_managerTransfers(managerID, max_iter, True, filepath_used, outname_1)
+    elif endPointType == "fplAPI_setPieceNotes":
+        fplAPI_setPieceNotes(True, filepath_used, outname_1, outname_2)
+    elif endPointType == "fplAPI_mostValuableTeams":
+        fplAPI_mostValuableTeams(True, filepath_used, outname_1)
+
+
+
+
 
 # create activeInput strings with ease
 def txt2activeInput(myTxt):
@@ -93,13 +121,6 @@ def func_pack_MenuConstButtons(from_toCall):
     btn_exit = tk.Button(from_toCall, text='Exit',font=('Bold',15), fg='black',bg='light pink',command=tk_base.quit)
     btn_exit.place(relx=0.5, rely=0.95, anchor="center")
 
-# command on button press, change button text between Yes/No, change entry to active/inactive
-# also check that these things are the right way round
-def func_ButtonPress(btn_pressed, ent_toBlank):
-    if btn_pressed['text'] == "No":
-        btn_pressed['text'] = "Yes"
-    elif btn_pressed['text'] == "Yes":
-        btn_pressed['text'] = "No"
 
 # function to add start-up menu/main frames to tk_base
 def func_pack_frmHome():
@@ -168,31 +189,24 @@ def func_pack_frmBasicDownloadsHome():
 
 def func_pack_frmBasicDownloadsEndpointButtons(frame_to_pack):
     constNumEntries = ("elementID", "managerID", "eventID", "leagueID", "page_number")
-    buttonArray = (("Best Leagues",txt2activeInput(" 1"),("Best Leagues","---","---","---","---","---","---","---","---")), 
-                   ("Bootstrap",txt2activeInput(" 9"),("Events","Teams","Elements","Element Types","Phases","Element Stats","Game Settings","Total Players","Chip Settings")), 
-                   ("Dream Team",txt2activeInput("3 2"),("GW Dream Team","GW Dream Player","---","---","---","---","---","---","---")), 
-                   ("Element Summary",txt2activeInput("1 3"),("Fixtures","History","History Past","---","---","---","---","---","---")), 
-                   ("Event Status",txt2activeInput(" 2"),("Status","Is Updating","---","---","---","---","---","---","---")), 
-                   ("Fixtures",txt2activeInput(" 2"),("Fixtures","Fixture Element Stats","---","---","---","---","---","---","---")), 
-                   ("Live GW Event",txt2activeInput("3 2"),("Element Stats","Points Distribution","---","---","---","---","---","---","---")), 
-                   ("League Standings",txt2activeInput("45 4"),("Standings","Info","Last Update","Meta","---","---","---","---","---")), 
-                   ("Manager Picks",txt2activeInput("23 4"),("Manager Picks","Subs","Entry History","Active Chips","---","---","---","---","---")), 
-                   ("Manager Info",txt2activeInput("2 2"),("General","League Info","---","---","---","---","---","---","---")), 
-                   ("Manager History",txt2activeInput("2 3"),("Current Season","Past Seasons","Chips","---","---","---","---","---","---")), 
-                   ("Manager Transfers",txt2activeInput("2 1"),("Transfers","---","---","---","---","---","---","---","---")), 
-                   ("Set Piece Notes",txt2activeInput(" 2"),("Set Piece Notes","Last Updated","---","---","---","---","---","---","---")), 
-                   ("Most Valuable Teams",txt2activeInput(" 1"),("Most Valuable Teams","---","---","---","---","---","---","---","---")))
-    #5,9,1
-
-    
-
-    
+    buttonArray = (("Best Leagues",txt2activeInput(" 1"),("Best Leagues","---","---","---","---","---","---","---","---"),"fplAPI_bestLeagues"), 
+                   ("Bootstrap",txt2activeInput(" 9"),("Events","Teams","Elements","Element Types","Phases","Element Stats","Game Settings","Total Players","Chip Settings"),"fplAPI_bootstrap"), 
+                   ("Dream Team",txt2activeInput("3 2"),("GW Dream Team","GW Dream Player","---","---","---","---","---","---","---"),"fplAPI_dreamTeam"), 
+                   ("Element Summary",txt2activeInput("1 3"),("Fixtures","History","History Past","---","---","---","---","---","---"),"fplAPI_elementSummary"), 
+                   ("Event Status",txt2activeInput(" 2"),("Status","Is Updating","---","---","---","---","---","---","---"),"fplAPI_eventStatus"), 
+                   ("Fixtures",txt2activeInput(" 2"),("Fixtures","Fixture Element Stats","---","---","---","---","---","---","---"),"fplAPI_fixtures"), 
+                   ("Live GW Event",txt2activeInput("3 2"),("Element Stats","Points Distribution","---","---","---","---","---","---","---"),"fplAPI_liveGameweekEvent"), 
+                   ("League Standings",txt2activeInput("45 4"),("Standings","Info","Last Update","Meta","---","---","---","---","---"),"fplAPI_leagueStandings"), 
+                   ("Manager Picks",txt2activeInput("23 4"),("Manager Picks","Subs","Entry History","Active Chips","---","---","---","---","---"),"fplAPI_managerEventPicks"), 
+                   ("doNotUse-Manager Info",txt2activeInput("2 2"),("General","League Info","---","---","---","---","---","---","---"),"fplAPI_manager"), 
+                   ("Manager History",txt2activeInput("2 3"),("Current Season","Past Seasons","Chips","---","---","---","---","---","---"),"fplAPI_managerHistory"), 
+                   ("Manager Transfers",txt2activeInput("2 1"),("Transfers","---","---","---","---","---","---","---","---"),"fplAPI_managerTransfers"), 
+                   ("Set Piece Notes",txt2activeInput(" 2"),("Set Piece Notes","Last Updated","---","---","---","---","---","---","---"),"fplAPI_setPieceNotes"), 
+                   ("Most Valuable Teams",txt2activeInput(" 1"),("Most Valuable Teams","---","---","---","---","---","---","---","---"),"fplAPI_mostValuableTeams"))
     
     # pack buttons for each endpoint
     for i in range(0,len(buttonArray)):
-        btn_basicDownloads_1 = tk.Button(frame_to_pack, text=buttonArray[i][0],font=('Bold',11), fg='black',bg='light pink',command=lambda i=i: func_pack_frmBasicDownloadsTest(buttonArray[i][0], "Fill in the blue entires then select Download", buttonArray[i][1], constNumEntries, buttonArray[i][2], "fplAPI_managerEventPicks"))
-        btn_basicDownloads_1.place(relx=0.5, rely=0.12 + (i*0.055), anchor="center")
-
+        tk.Button(frame_to_pack, text=buttonArray[i][0],font=('Bold',11), fg='black',bg='light pink',command=lambda i=i: func_pack_frmBasicDownloadsTest(buttonArray[i][0], "Fill in the blue entires then select Download", buttonArray[i][1], constNumEntries, buttonArray[i][2], buttonArray[i][3])).place(relx=0.5, rely=0.12 + (i*0.055), anchor="center")
 
 
 
