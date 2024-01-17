@@ -1,0 +1,74 @@
+{
+    "save_filepath": "C:\\Users\\Alan\\Documents\\visual studio code\\fpl stuff\\fplAPI_stuff\\results",
+    "max_iter": 200,
+    "frm_basic_downloads": {
+        "max_iter": 120,
+        "fplAPI_managerEventPicks": {
+            "elementID": {
+                "is_active": "disabled",
+                "entry_val": "no_value"
+            },
+            "managerID": {
+                "is_active": "normal",
+                "entry_val": 12345
+            },
+            "eventID": {
+                "is_active": "normal",
+                "entry_val": 18
+            },
+            "leagueID": {
+                "is_active": "disabled",
+                "entry_val": "no_value"
+            },
+            "page_number": {
+                "is_active": "disabled",
+                "entry_val": "no_value"
+            },
+            "out_name_slot_1": {
+                "is_active": "normal",
+                "label_name": "Manager picks",
+                "entry_val": "Manager picks"
+            },
+            "out_name_slot_2": {
+                "is_active": "normal",
+                "label_name": "Subs",
+                "entry_val": "Subs"
+            },
+            "out_name_slot_3": {
+                "is_active": "normal",
+                "label_name": "Entry History",
+                "entry_val": "Entry History"
+            },
+            "out_name_slot_4": {
+                "is_active": "normal",
+                "label_name": "Active Chips",
+                "entry_val": "Active Chips"
+            },
+            "out_name_slot_5": {
+                "is_active": "disabled",
+                "label_name": "--------",
+                "entry_val": "no_value"
+            },
+            "out_name_slot_6": {
+                "is_active": "disabled",
+                "label_name": "--------",
+                "entry_val": "no_value"
+            },
+            "out_name_slot_7": {
+                "is_active": "disabled",
+                "label_name": "--------",
+                "entry_val": "no_value"
+            },
+            "out_name_slot_8": {
+                "is_active": "disabled",
+                "label_name": "--------",
+                "entry_val": "no_value"
+            },
+            "out_name_slot_9": {
+                "is_active": "disabled",
+                "label_name": "--------",
+                "entry_val": "no_value"
+            }
+        }
+    }
+}
