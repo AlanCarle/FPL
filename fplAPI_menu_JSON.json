@@ -1,74 +1,108 @@
 {
     "save_filepath": "C:\\Users\\Alan\\Documents\\visual studio code\\fpl stuff\\fplAPI_stuff\\results",
     "max_iter": 200,
-    "frm_basic_downloads": {
-        "max_iter": 120,
-        "fplAPI_managerEventPicks": {
-            "elementID": {
-                "is_active": "disabled",
-                "entry_val": "no_value"
-            },
-            "managerID": {
-                "is_active": "normal",
-                "entry_val": 12345
-            },
-            "eventID": {
-                "is_active": "normal",
-                "entry_val": 18
-            },
-            "leagueID": {
-                "is_active": "disabled",
-                "entry_val": "no_value"
-            },
-            "page_number": {
-                "is_active": "disabled",
-                "entry_val": "no_value"
-            },
-            "out_name_slot_1": {
-                "is_active": "normal",
-                "label_name": "Manager picks",
-                "entry_val": "Manager picks"
-            },
-            "out_name_slot_2": {
-                "is_active": "normal",
-                "label_name": "Subs",
-                "entry_val": "Subs"
-            },
-            "out_name_slot_3": {
-                "is_active": "normal",
-                "label_name": "Entry History",
-                "entry_val": "Entry History"
-            },
-            "out_name_slot_4": {
-                "is_active": "normal",
-                "label_name": "Active Chips",
-                "entry_val": "Active Chips"
-            },
-            "out_name_slot_5": {
-                "is_active": "disabled",
-                "label_name": "--------",
-                "entry_val": "no_value"
-            },
-            "out_name_slot_6": {
-                "is_active": "disabled",
-                "label_name": "--------",
-                "entry_val": "no_value"
-            },
-            "out_name_slot_7": {
-                "is_active": "disabled",
-                "label_name": "--------",
-                "entry_val": "no_value"
-            },
-            "out_name_slot_8": {
-                "is_active": "disabled",
-                "label_name": "--------",
-                "entry_val": "no_value"
-            },
-            "out_name_slot_9": {
-                "is_active": "disabled",
-                "label_name": "--------",
-                "entry_val": "no_value"
-            }
+
+    "loadInfo": {
+        "fplAPI_bestLeagues":{
+            "title": "Best Leagues",
+            "frmtNumEnt": " 0",
+            "numEnt": "elementID,managerID,eventID,leagueID,page_number,---,---,---,---,---,---,---,---,---,max iterations",
+            "frmtTxtEnt": 1,
+            "txtEnt": "Best Leagues,---,---,---,---,---,---,---,---,---,---,---,---,---,---"
+        },
+        "fplAPI_bootstrap":{
+            "title": "Bootstrap",
+            "frmtNumEnt": " 0",
+            "numEnt": "elementID,managerID,eventID,leagueID,page_number,---,---,---,---,---,---,---,---,---,max iterations",
+            "frmtTxtEnt": 9,
+            "txtEnt": "Events,Teams,Elements,Element Types,Phases,Element Stats,Game Settings,Total Players,Chip Settings,---,---,---,---,---,---"
+        },
+        "fplAPI_dreamTeam":{
+            "title": "Dream Team",
+            "frmtNumEnt": "3 0",
+            "numEnt": "elementID,managerID,eventID,leagueID,page_number,---,---,---,---,---,---,---,---,---,max iterations",
+            "frmtTxtEnt": 2,
+            "txtEnt": "GW Dream Team,GW Dream Player,---,---,---,---,---,---,---,---,---,---,---,---,---"
+        },
+        "fplAPI_elementSummary":{
+            "title": "Element Summary",
+            "frmtNumEnt": "1 0",
+            "numEnt": "elementID,managerID,eventID,leagueID,page_number,---,---,---,---,---,---,---,---,---,max iterations",
+            "frmtTxtEnt": 3,
+            "txtEnt": "Fixtures,History,History Past,---,---,---,---,---,---,---,---,---,---,---,---"
+        },
+        "fplAPI_eventStatus":{
+            "title": "Event Status",
+            "frmtNumEnt": " 0",
+            "numEnt": "elementID,managerID,eventID,leagueID,page_number,---,---,---,---,---,---,---,---,---,max iterations",
+            "frmtTxtEnt": 2,
+            "txtEnt": "Status,Is Updating,---,---,---,---,---,---,---,---,---,---,---,---,---"
+        },
+        "fplAPI_fixtures":{
+            "title": "Fixtures",
+            "frmtNumEnt": " 0",
+            "numEnt": "elementID,managerID,eventID,leagueID,page_number,---,---,---,---,---,---,---,---,---,max iterations",
+            "frmtTxtEnt": 2,
+            "txtEnt": "Fixtures,Fixture Element Stats,---,---,---,---,---,---,---,---,---,---,---,---,---"
+        },
+        "fplAPI_liveGameweekEvent":{
+            "title": "Live GW Event",
+            "frmtNumEnt": "3 0",
+            "numEnt": "elementID,managerID,eventID,leagueID,page_number,---,---,---,---,---,---,---,---,---,max iterations",
+            "frmtTxtEnt": 2,
+            "txtEnt": "Element Stats,Points Distribution,---,---,---,---,---,---,---,---,---,---,---,---,---"
+        },
+        "fplAPI_leagueStandings":{
+            "title": "League Standings",
+            "frmtNumEnt": "45 0",
+            "numEnt": "elementID,managerID,eventID,leagueID,page_number,---,---,---,---,---,---,---,---,---,max iterations",
+            "frmtTxtEnt": 4,
+            "txtEnt": "Standings,Info,Last Update,Meta,---,---,---,---,---,---,---,---,---,---,---"
+        },
+        "fplAPI_managerEventPicks":{
+            "title": "Manager Picks",
+            "frmtNumEnt": "23 0",
+            "numEnt": "elementID,managerID,eventID,leagueID,page_number,---,---,---,---,---,---,---,---,---,max iterations",
+            "frmtTxtEnt": 4,
+            "txtEnt": "Manager Picks,Subs,Entry History,Active Chips,---,---,---,---,---,---,---,---,---,---,---"
+        },
+        "fplAPI_manager":{
+            "title": "doNotUse-Manager Info",
+            "frmtNumEnt": "2 0",
+            "numEnt": "elementID,managerID,eventID,leagueID,page_number,---,---,---,---,---,---,---,---,---,max iterations",
+            "frmtTxtEnt": 2,
+            "txtEnt": "General,League Info,---,---,---,---,---,---,---,---,---,---,---,---,---"
+        },
+        "fplAPI_managerHistory":{
+            "title": "Manager History",
+            "frmtNumEnt": "2 0",
+            "numEnt": "elementID,managerID,eventID,leagueID,page_number,---,---,---,---,---,---,---,---,---,max iterations",
+            "frmtTxtEnt": 3,
+            "txtEnt": "Current Season,Past Seasons,Chips,---,---,---,---,---,---,---,---,---,---,---,---"
+        },
+        "fplAPI_managerTransfers":{
+            "title": "Manager Transfers",
+            "frmtNumEnt": "2 0",
+            "numEnt": "elementID,managerID,eventID,leagueID,page_number,---,---,---,---,---,---,---,---,---,max iterations",
+            "frmtTxtEnt": 1,
+            "txtEnt": "Transfers,---,---,---,---,---,---,---,---,---,---,---,---,---,---"
+        },
+        "fplAPI_setPieceNotes":{
+            "title": "Set Piece Notes",
+            "frmtNumEnt": " 0",
+            "numEnt": "elementID,managerID,eventID,leagueID,page_number,---,---,---,---,---,---,---,---,---,max iterations",
+            "frmtTxtEnt": 2,
+            "txtEnt": "Set Piece Notes,Last Updated,---,---,---,---,---,---,---,---,---,---,---,---,---"
+        },
+        "fplAPI_mostValuableTeams":{
+            "title": "Most Valuable Teams",
+            "frmtNumEnt": " 0",
+            "numEnt": "elementID,managerID,eventID,leagueID,page_number,---,---,---,---,---,---,---,---,---,max iterations",
+            "frmtTxtEnt": 1,
+            "txtEnt": "Most Valuable Teams,---,---,---,---,---,---,---,---,---,---,---,---,---,---"
         }
+
     }
+    
+    
 }

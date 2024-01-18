@@ -210,25 +210,22 @@ def func_pack_frmBasicDownloadsHome():
 
 
 def func_pack_frmBasicDownloadsEndpointButtons(frame_to_pack):
-    constNumEntries = ("elementID", "managerID", "eventID", "leagueID", "page_number","---","---","---","---","---","---","---","---","---","max iterations")
-    buttonArray = (("Best Leagues",txt2activeInput(" 0"),num2activeInput(1),("Best Leagues","---","---","---","---","---","---","---","---","---","---","---","---","---","---"),"fplAPI_bestLeagues"), 
-                   ("Bootstrap",txt2activeInput(" 0"),num2activeInput(9),("Events","Teams","Elements","Element Types","Phases","Element Stats","Game Settings","Total Players","Chip Settings","---","---","---","---","---","---"),"fplAPI_bootstrap"), 
-                   ("Dream Team",txt2activeInput("3 0"),num2activeInput(2),("GW Dream Team","GW Dream Player","---","---","---","---","---","---","---","---","---","---","---","---","---"),"fplAPI_dreamTeam"), 
-                   ("Element Summary",txt2activeInput("1 0"),num2activeInput(3),("Fixtures","History","History Past","---","---","---","---","---","---","---","---","---","---","---","---"),"fplAPI_elementSummary"), 
-                   ("Event Status",txt2activeInput(" 0"),num2activeInput(2),("Status","Is Updating","---","---","---","---","---","---","---","---","---","---","---","---","---"),"fplAPI_eventStatus"), 
-                   ("Fixtures",txt2activeInput(" 0"),num2activeInput(2),("Fixtures","Fixture Element Stats","---","---","---","---","---","---","---","---","---","---","---","---","---"),"fplAPI_fixtures"), 
-                   ("Live GW Event",txt2activeInput("3 0"),num2activeInput(2),("Element Stats","Points Distribution","---","---","---","---","---","---","---","---","---","---","---","---","---"),"fplAPI_liveGameweekEvent"), 
-                   ("League Standings",txt2activeInput("45 0"),num2activeInput(4),("Standings","Info","Last Update","Meta","---","---","---","---","---","---","---","---","---","---","---"),"fplAPI_leagueStandings"), 
-                   ("Manager Picks",txt2activeInput("23 0"),num2activeInput(4),("Manager Picks","Subs","Entry History","Active Chips","---","---","---","---","---","---","---","---","---","---","---"),"fplAPI_managerEventPicks"), 
-                   ("doNotUse-Manager Info",txt2activeInput("2 0"),num2activeInput(2),("General","League Info","---","---","---","---","---","---","---","---","---","---","---","---","---"),"fplAPI_manager"), 
-                   ("Manager History",txt2activeInput("2 0"),num2activeInput(3),("Current Season","Past Seasons","Chips","---","---","---","---","---","---","---","---","---","---","---","---"),"fplAPI_managerHistory"), 
-                   ("Manager Transfers",txt2activeInput("2 0"),num2activeInput(1),("Transfers","---","---","---","---","---","---","---","---","---","---","---","---","---","---"),"fplAPI_managerTransfers"), 
-                   ("Set Piece Notes",txt2activeInput(" 0"),num2activeInput(2),("Set Piece Notes","Last Updated","---","---","---","---","---","---","---","---","---","---","---","---","---"),"fplAPI_setPieceNotes"), 
-                   ("Most Valuable Teams",txt2activeInput(" 0"),num2activeInput(1),("Most Valuable Teams","---","---","---","---","---","---","---","---","---","---","---","---","---","---"),"fplAPI_mostValuableTeams"))
+
+    buttonArray = ("fplAPI_bestLeagues","fplAPI_bootstrap","fplAPI_dreamTeam","fplAPI_elementSummary","fplAPI_eventStatus","fplAPI_fixtures","fplAPI_liveGameweekEvent","fplAPI_leagueStandings","fplAPI_managerEventPicks","fplAPI_manager","fplAPI_managerHistory","fplAPI_managerTransfers","fplAPI_setPieceNotes","fplAPI_mostValuableTeams")
     
     # pack buttons for each endpoint
     for i in range(0,len(buttonArray)):
-        tk.Button(frame_to_pack, text=buttonArray[i][0],font=('Bold',11), fg='black',bg='light pink',command=lambda i=i: func_pack_frmBasicDownloadsTest(buttonArray[i][0], "Fill in the blue entires then select Download",buttonArray[i][1], buttonArray[i][2], constNumEntries, buttonArray[i][3], buttonArray[i][4])).place(relx=0.5, rely=0.12 + (i*0.055), anchor="center")
+        tk.Button(frame_to_pack, text=settingsData["loadInfo"][buttonArray[i]]["title"],font=('Bold',11), fg='black',bg='light pink',
+            command=lambda i=i: func_pack_frmBasicDownloadsTest(
+                settingsData["loadInfo"][buttonArray[i]]["title"], 
+                "Fill in the blue entires then select Download", 
+                txt2activeInput(settingsData["loadInfo"][buttonArray[i]]["frmtNumEnt"]), 
+                num2activeInput(settingsData["loadInfo"][buttonArray[i]]["frmtTxtEnt"]), 
+                tuple(settingsData["loadInfo"][buttonArray[i]]["numEnt"].split(",")), 
+                tuple(settingsData["loadInfo"][buttonArray[i]]["txtEnt"].split(",")), 
+                buttonArray[i])
+            ).place(relx=0.5, rely=0.12 + (i*0.055), anchor="center")
+
 
 
 
