@@ -91,6 +91,9 @@ def func_basicDownloadEndpointExportCSV(endPointType, filepath_used, max_iter, e
         fplAPI_setPieceNotes(True, filepath_used, outname_1, outname_2)
     elif endPointType == "fplAPI_mostValuableTeams":
         fplAPI_mostValuableTeams(True, filepath_used, outname_1)
+    elif endPointType == "fplAPI_returnLastPageandRank":
+        fplAPI_returnLastPageandRank(leagueID, numVal_6, max_iter, True, filepath_used, outname_1)
+
 
 
 
@@ -145,18 +148,20 @@ def func_pack_MenuConstButtons(from_toCall):
     btn_exit.place(relx=0.5, rely=0.95, anchor="center")
 
 
+# first set up func to save filepath if needed to external json file
+def func_setFilepath(entryWidget):
+    # change the thing you want to change
+    settingsData['save_filepath'] = entryWidget.get()
+
+    # open json file as write, put info in, close file
+    with open("fplAPI_menu_JSON.json", "w") as json_data:
+        json.dump(settingsData, json_data, indent=4)
+        json_data.close()
+
+
+
 # function to add start-up menu/main frames to tk_base
 def func_pack_frmHome():
-    
-    # first set up func to save filepath if needed to external json file
-    def func_setFilepath():
-        # change the thing you want to change
-        settingsData['save_filepath'] = entRequestFilepath.get()
-
-        # open json file as write, put info in, close file
-        with open("fplAPI_menu_JSON.json", "w") as json_data:
-            json.dump(settingsData, json_data, indent=4)
-            json_data.close()
     
     # ensure no frames exist in const frames
     func_deleteFrames()
@@ -165,8 +170,14 @@ def func_pack_frmHome():
     frm_menuHome = tk.Frame(frm_menu_const, height=base_height, width=150, bg="light pink")
     func_pack_MenuConstButtons(frm_menuHome)
 
-    btn_basicDownloads = tk.Button(frm_menuHome, text='Basic' + "\n" + 'Downloads',font=('Bold',13), fg='black',bg='light pink',command=lambda: func_pack_frmBasicDownloadsHome())
+    # insert button for basic downloads
+    btn_basicDownloads = tk.Button(frm_menuHome, text='Basic' + "\n" + 'Downloads',font=('Bold',13), fg='black',bg='light pink',command=lambda: func_pack_frm_epButtons_choose("ep_basicDownloads"))
     btn_basicDownloads.place(relx=0.5, rely=0.18, anchor="center")
+    frm_menuHome.pack(pady=20)
+    
+    # insert button for misc downloads
+    btn_basicDownloads = tk.Button(frm_menuHome, text='Misc' + "\n" + 'Downloads',font=('Bold',13), fg='black',bg='light pink',command=lambda: func_pack_frm_epButtons_choose("ep_miscDownloads"))
+    btn_basicDownloads.place(relx=0.5, rely=0.28, anchor="center")
     frm_menuHome.pack(pady=20)
     
     # pack main
@@ -179,7 +190,7 @@ def func_pack_frmHome():
     entRequestFilepath = tk.Entry(frm_mainHome,width=150)
     entRequestFilepath.insert(0,settingsData['save_filepath'])
     entRequestFilepath.pack(pady=10)
-    btnSetFilepath = tk.Button(frm_mainHome, text="Set current filepath.",command=lambda: func_setFilepath())
+    btnSetFilepath = tk.Button(frm_mainHome, text="Set current filepath.",command=lambda: func_setFilepath(entRequestFilepath))
     btnSetFilepath.pack(pady=2)
     
     frm_mainHome.pack(pady=20)
@@ -188,7 +199,7 @@ def func_pack_frmHome():
 
 
 
-def func_pack_frmBasicDownloadsHome():
+def func_pack_frm_epButtons_choose(endPointArrayLabel):
     # ensure no frames exist in const frames
     func_deleteFrames()
     
@@ -203,34 +214,32 @@ def func_pack_frmBasicDownloadsHome():
     lblTitle = tk.Label(frm_main_BasicDownloadsHome, text="Select which endpoint to download",font=('Bold',30),bg="light grey")
     lblTitle.pack()
 
-    func_pack_frmBasicDownloadsEndpointButtons(frm_menu_BasicDownloadsHome)
+    func_pack_frm_epButtons_choooseMenu(frm_menu_BasicDownloadsHome, endPointArrayLabel)
     
     
+def func_pack_frm_epButtons_choooseMenu(frame_to_pack, buttonArrayLabel):
 
-
-
-def func_pack_frmBasicDownloadsEndpointButtons(frame_to_pack):
-
-    buttonArray = ("fplAPI_bestLeagues","fplAPI_bootstrap","fplAPI_dreamTeam","fplAPI_elementSummary","fplAPI_eventStatus","fplAPI_fixtures","fplAPI_liveGameweekEvent","fplAPI_leagueStandings","fplAPI_managerEventPicks","fplAPI_manager","fplAPI_managerHistory","fplAPI_managerTransfers","fplAPI_setPieceNotes","fplAPI_mostValuableTeams")
+    buttonArray = settingsData["btnLoads"][buttonArrayLabel].split(",")
     
     # pack buttons for each endpoint
     for i in range(0,len(buttonArray)):
         tk.Button(frame_to_pack, text=settingsData["loadInfo"][buttonArray[i]]["title"],font=('Bold',11), fg='black',bg='light pink',
-            command=lambda i=i: func_pack_frmBasicDownloadsTest(
+            command=lambda i=i: func_pack_frm_epButtons_download(
                 settingsData["loadInfo"][buttonArray[i]]["title"], 
                 "Fill in the blue entires then select Download", 
                 txt2activeInput(settingsData["loadInfo"][buttonArray[i]]["frmtNumEnt"]), 
                 num2activeInput(settingsData["loadInfo"][buttonArray[i]]["frmtTxtEnt"]), 
                 tuple(settingsData["loadInfo"][buttonArray[i]]["numEnt"].split(",")), 
                 tuple(settingsData["loadInfo"][buttonArray[i]]["txtEnt"].split(",")), 
-                buttonArray[i])
+                buttonArray[i],
+                buttonArrayLabel)
             ).place(relx=0.5, rely=0.12 + (i*0.055), anchor="center")
 
 
 
 
 # pack the menu and main frames for the basic downloads page
-def func_pack_frmBasicDownloadsTest(headerText, subheaderText, numSideActiveInputs, txtSideActiveInputs, numEntries, txtEntries, fpl_type):
+def func_pack_frm_epButtons_download(headerText, subheaderText, numSideActiveInputs, txtSideActiveInputs, numEntries, txtEntries, fpl_type, buttonArrayLabel):
     
     
     # ensure no frames exist in const frames
@@ -240,7 +249,7 @@ def func_pack_frmBasicDownloadsTest(headerText, subheaderText, numSideActiveInpu
     frm_menu_BasicDownloads = tk.Frame(frm_menu_const, height=base_height, width=150, bg="light pink")
     func_pack_MenuConstButtons(frm_menu_BasicDownloads)
     frm_menu_BasicDownloads.pack(pady=20)
-    func_pack_frmBasicDownloadsEndpointButtons(frm_menu_BasicDownloads)
+    func_pack_frm_epButtons_choooseMenu(frm_menu_BasicDownloads, buttonArrayLabel)
     
     # pack main
     frm_main_BasicDownloads = tk.Frame(frm_main_const, height=base_height, width=base_width-150,bg="light grey")
@@ -264,9 +273,6 @@ def func_pack_frmBasicDownloadsTest(headerText, subheaderText, numSideActiveInpu
     # add button to run the appropriate code
     tk.Button(frm_main_BasicDownloads,text="Download File", font=('Arial',13), bg="light grey", command=lambda: func_basicDownloadEndpointExportCSV(fpl_type,settingsData['save_filepath'],numWidgetsList[15][1].get(), elementID=numWidgetsList[1][1].get(), managerID=numWidgetsList[2][1].get(), eventID=numWidgetsList[3][1].get(), leagueID=numWidgetsList[4][1].get(), page_number=numWidgetsList[5][1].get(), numVal_6=numWidgetsList[6][1].get(), numVal_7=numWidgetsList[7][1].get(), numVal_8=numWidgetsList[8][1].get(), numVal_9=numWidgetsList[9][1].get(), numVal_10=numWidgetsList[10][1].get(), numVal_11=numWidgetsList[11][1].get(), numVal_12=numWidgetsList[12][1].get(), numVal_13=numWidgetsList[13][1].get(), numVal_14=numWidgetsList[14][1].get(), outname_1=txtWidgetsList[1][1].get(), outname_2=txtWidgetsList[2][1].get(), outname_3=txtWidgetsList[3][1].get(), outname_4=txtWidgetsList[4][1].get(), outname_5=txtWidgetsList[5][1].get(), outname_6=txtWidgetsList[6][1].get(), outname_7=txtWidgetsList[7][1].get(), outname_8=txtWidgetsList[8][1].get(), outname_9=txtWidgetsList[9][1].get(), outname_10=txtWidgetsList[10][1].get(), outname_11=txtWidgetsList[11][1].get(), outname_12=txtWidgetsList[12][1].get(), outname_13=txtWidgetsList[13][1].get(), outname_14=txtWidgetsList[14][1].get(), outname_15=txtWidgetsList[15][1].get())).grid(row=len(txtEntries)+3,column=1,pady=(20,0))
 
-
-
-# func_basicDownloadEndpointExportCSV(fpl_type,settingsData['save_filepath'],widgetsList[15][1].get(), elementID=widgetsList[1][1].get(), managerID=widgetsList[2][1].get(), eventID=widgetsList[3][1].get(), leagueID=widgetsList[4][1].get(), page_number=widgetsList[5][1].get(), outname_1=widgetsList[6][1].get(), outname_2=widgetsList[7][1].get(), outname_3=widgetsList[8][1].get(), outname_4=widgetsList[9][1].get(), outname_5=widgetsList[10][1].get(), outname_6=widgetsList[11][1].get(), outname_7=widgetsList[12][1].get(), outname_8=widgetsList[13][1].get(), outname_9=widgetsList[14][1].get())
 
 def setupMyWidgets(isNum, labelList, frm_to_pack, activeList, startRow, startCol):
     num_cols = 2; num_rows = len(labelList)+1
